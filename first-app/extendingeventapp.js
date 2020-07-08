@@ -17,5 +17,7 @@ logger.on('messageLogged', (arg)=> {
     console.log("Listener Called",arg)
 });
 
+// You must call the class method to call the object method
+
 logger.log("message")
 
