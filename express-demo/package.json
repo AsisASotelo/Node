@@ -1,5 +1,5 @@
 {
-  "name": "npm_intro",
+  "name": "express-demo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,10 +10,6 @@
   "author": "Asis Sotelo <asis.a.sotelo@icloud.com>",
   "license": "ISC",
   "dependencies": {
-    "mongoose": "^5.9.22",
-    "underscore": "^1.10.2"
-  },
-  "devDependencies": {
-    "jshint": "^2.11.1"
+    "express": "^4.17.1"
   }
 }
