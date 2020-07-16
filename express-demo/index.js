@@ -1,7 +1,19 @@
+const Joi = require("@hapi/joi")
 const express = require("express");
 const app = express();
 
+//Activate JSON
 
+app.use(express.json())
+
+
+//Courses Array
+
+const courses = [
+    {id:1,name:'course1'},
+    {id:2,name:'course2'},
+    {id:3,name:'course3'},
+]
 // App's HTTP Request
 
 app.get("/", (req, res) => {
@@ -14,16 +26,98 @@ app.get("/", (req, res) => {
 // This req object has a lot of useful properties
 // These properties are found in the express api documentation
 
-// We set up a listener on a port
+// Here the server returns the entire course array.
 app.get("/api/courses", (req, res) => {
-    res.send([1, 2, 3, 4])
+    res.send(courses)
 
 })
 
-//Here the 
+//Here the server returns a unique course array.
 
 app.get('/api/courses/:id', (req, res) => {
-    res.send(req.params.id);
+
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+    if(! course) return res.status(404).send('The course with the given ID was not found.');
+
+    res.send(course);
+ 
+})
+
+
+// Handling HTTP Posts With Validation
+app.post('/api/courses', (req,res) => {
+
+    const {error} = validateCourse(req.body);
+
+    if(error) return  res.status(400).send(result.error);
+        //400 Bad Request
+       
+        
+
+
+   
+
+    
+    const course= {
+        id:courses.length +1,
+        name:req.body.name,        
+    };
+
+    courses.push(course);
+    res.send(course); // This helps us know that the object has been set.
+
+});
+
+
+// Handling Updates to Our Resources with PUT
+
+app.put('/api/courses/:id',(req,res) => {
+    // Look up the Course
+    // If not existing, 404, otherwise validated 
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+    if(! course) return res.status(404).send('The course with the given ID was not found.');
+    
+
+    //Validate
+    
+   const result = validateCourse(req.body);
+   const {error} = validateCourse(req.body);
+
+    if(error) return res.status(400).send(result.error);
+        //400 Bad Request
+       
+    
+
+    //If invalid, return 400 - Bad Reqeust
+    // Return the updated Course
+    course.name = req.body.name;
+    res.send(course);
+
+});
+
+function validateCourse(course){
+    const schema =Joi.object({
+        name: Joi.string().min(3).required()
+    });
+
+    return schema.validate(course);
+
+}
+
+//Hanling Delete Requests
+
+app.delete('/api/courses/:id', (req,res) => {
+
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+    if(! course) return res.status(404).send('The course with the given ID was not found.');
+ 
+
+    // Delete part
+
+    const index = courses.indexOf(course);
+    courses.splice(index,1)
+    res.send(course)
+
 })
 
 // Multiple Parameters 
@@ -31,6 +125,7 @@ app.get('/api/courses/:id', (req, res) => {
 app.get('/api/posts/:year/:month', (req, res) => {
     res.send(req.params)
 })
+
 
 
 // PORT
