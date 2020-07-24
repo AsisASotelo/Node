@@ -3,37 +3,64 @@ const { get } = require("../express-demo/routes/home");
 console.log('Before')
 
 
-getUser(1, getRepositories);
+// getUser(1)
+//     .then(user=> getRepositories(user.gitHubUsername))
+//     .then(repo => getCommits(repo[0]))
+//     .then(commit => console.log('Commits',commit))
+//     .catch(err=>console.log('Error',err.message))
 
 
+async function displayCommits(){
+
+    const user = await getUser(1)
+    const repo = await getRepositories(user.gitHubUsername);
+    const commits = await getCommits(repo[0]);
+    console.log(commits)
+
+}
+
+displayCommits();
 
 
 console.log('After')
 
+
+function getUser(id){
+    return  new Promise((resolve,reject)=>{
+
+        
+        setTimeout(()=>{
+            resolve({id:id,gitHubUsername:'mosh'})
+            
+            console.log("Reading a user from a database...");
+
+        },2000)
+    });
+}
+
 function getRepositories(user){
-    getRepositories(user.gitHubUserName, getCommits);
+
+    return new Promise((resolve,reject)=> {
+
+        setTimeout(() => {
+            console.log("Calling GitHub API ...");
+            // resolve(['repo1','repo2','repo3']);
+            reject(new Error("Could not get the repository."))
+        }, 2000);
+
+
+    });
+    
 }
 
-function getCommits(repos){
-    getCommits(repo,displayCommits)
 
-}
+function getCommits(repo){
+    return new Promise((resolve,reject) => {
+        setTimeout(()=>{
+            console.log("Calling GitHub API...");
+            resolve(['commit'])
+        },2000);
+    }) 
 
-function displayCommits(commits){
-    console.log(commits);
-}
 
-function getUser(id,callback){
-    setTimeout(()=> {
-        console.log("Reading a user from a database ...")
-        callback({id:id,gitHubUsername:'mosh'})
-    }, 2000)
-}
-
-function getRepositories(username,callback){
-
-    setTimeout(()=>{
-        callback({user: username,repositories:["repo1","repo2","repo3"] })
-
-    },2000);
 }
