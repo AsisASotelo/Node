@@ -10,7 +10,18 @@ state = {
 }
 
 
+
 const counter = [state.counters[2]]
 const counters = [...state.counters]
 
-console.log(state.counters.indexOf(counter))
+index = 2
+console.log("Counters 2" , counters)
+console.log("State.Counters:",state.counters)
+console.log("counter:",counter)
+counters[index] = {...counter}
+console.log("After Index Change State Counters",state.counters)
+counters[index].value++
+console.log("State Counters Final",state.counters)
+console.log("Counters Final",counters)
+
+
